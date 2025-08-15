@@ -1,95 +1,142 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+import { useEffect, useRef } from "react";
+import Card from "./Card";
+import ShoeModel from "./ShoeModel";
+
+import ReactLenis from "@studio-freight/react-lenis";
+import gsap from "gsap";
+import ScrollTrigger from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.js</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const container = useRef(null);
+  const cardRefs = useRef([]);
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+  useGSAP(
+    () => {
+      const cards = cardRefs.current;
+      const totalScrollHeight = window.innerHeight * 3;
+      const positions = [14, 38, 62, 86];
+      const rotations = [-15, -7.5, 7.5, 15];
+
+      // pin cards section
+      ScrollTrigger.create({
+        trigger: container.current.querySelector(".cards"),
+        start: "top top",
+        end: () => `+=${totalScrollHeight}`,
+        pin: true,
+        pinSpacing: true,
+      });
+
+      // spread cards
+      cards.forEach((card, index) => {
+        gsap.to(card, {
+          left: `${positions[index]}%`,
+          rotation: `${rotations[index]}`,
+          ease: "none",
+          scrollTrigger: {
+            trigger: container.current.querySelector(".cards"),
+            start: "top top",
+            end: () => `+=${window.innerHeight}`,
+            scrub: 0.5,
+            id: `spread-${index}`,
+          },
+        });
+      });
+
+      // flip cards and reset rotation with staggered effect
+      cards.forEach((card, index) => {
+        const frontEl = card.querySelector(".flip-card-front");
+        const backEl = card.querySelector(".flip-card-back");
+
+        const staggerOffset = index * 0.05;
+        const startOffset = 1 / 3 + staggerOffset;
+        const endOffset = 2 / 3 + staggerOffset;
+
+        ScrollTrigger.create({
+          trigger: container.current.querySelector(".cards"),
+          start: "top top",
+          end: () => `+=${totalScrollHeight}`,
+          scrub: 1,
+          id: `rotate-flip-${index}`,
+          onUpdate: (self) => {
+            const progress = self.progress;
+            if (progress >= startOffset && progress <= endOffset) {
+              const animationProgress = (progress - startOffset) / (1 / 3);
+              const frontRotation = -180 * animationProgress;
+              const backRotation = 180 - 180 * animationProgress;
+              const cardRotation = rotations[index] * (1 - animationProgress);
+
+              gsap.to(frontEl, { rotateY: frontRotation, ease: "power1.out" });
+              gsap.to(backEl, { rotateY: backRotation, ease: "power1.out" });
+              gsap.to(card, {
+                xPercent: -50,
+                yPercent: -50,
+                rotate: cardRotation,
+                ease: "power1.out",
+              });
+            }
+          },
+        });
+      });
+    },
+    { scope: container }
+  );
+
+  useEffect(() => {
+    return () => {
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+    };
+  }, []);
+
+  return (
+    <>
+      <ReactLenis root>
+        <div className="container" ref={container}>
+          <section className="hero">
+            <ShoeModel />
+            <h1>
+            Scan your sneakers, <br />
+            Own your cards
+            </h1>
+            <button 
+              className="cta-button"
+              onClick={() => window.open('https://x.com/zanweiguo', '_blank')}
+            >
+              Download on App Store
+            </button>
+          </section>
+
+          <section className="cards">
+            {[...Array(4)].map((_, index) => {
+              // 为不同的卡片分配不同的背景图片
+              const cardBackgrounds = [
+                "/card-front-4.png",
+                "/card-front-2.png",
+                "/card-front-3.png",
+                "/card-front.png"  // 第4张卡片使用第1张的背景
+              ];
+              
+              return (
+                <Card
+                  key={index}
+                  id={`card-${index + 1}`}
+                  frontSrc={cardBackgrounds[index]}
+                  frontAlt="Card Image"
+                  backText="Your card details appear here"
+                  ref={(el) => (cardRefs.current[index] = el)}
+                />
+              );
+            })}
+          </section>
+
+          <section className="footer">
+            <h1>Footer or Upcoming Section</h1>
+          </section>
         </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </ReactLenis>
+    </>
   );
 }
