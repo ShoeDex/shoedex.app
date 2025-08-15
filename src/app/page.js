@@ -17,9 +17,9 @@ export default function Home() {
   useGSAP(
     () => {
       const cards = cardRefs.current;
-      const totalScrollHeight = window.innerHeight * 3;
-      const positions = [14, 38, 62, 86];
-      const rotations = [-15, -7.5, 7.5, 15];
+      const totalScrollHeight = window.innerHeight * 1.4;
+      const positions = [15, 36, 60, 85];
+      const rotations = [-8, -8, 4, 10];
 
       // pin cards section
       ScrollTrigger.create({
@@ -28,56 +28,60 @@ export default function Home() {
         end: () => `+=${totalScrollHeight}`,
         pin: true,
         pinSpacing: true,
+        anticipatePin: 1,
       });
 
-      // spread cards
+      // 设置初始为摊开状态并显示文字面（backText）
+      cards.forEach((card, index) => {
+        const frontEl = card.querySelector(".flip-card-front");
+        const backEl = card.querySelector(".flip-card-back");
+
+        // 初始：摊开 + 显示 back（文字面）
+        gsap.set(card, {
+          left: `${positions[index]}%`,
+          rotation: rotations[index],
+        });
+        gsap.set(frontEl, { rotateY: -180 });
+        gsap.set(backEl, { rotateY: 0 });
+      });
+
+      // 滚动前段：由摊开过渡到中心堆叠（位置与旋转对调）
       cards.forEach((card, index) => {
         gsap.to(card, {
-          left: `${positions[index]}%`,
-          rotation: `${rotations[index]}`,
+          left: "50%",
+          rotation: 0,
           ease: "none",
           scrollTrigger: {
             trigger: container.current.querySelector(".cards"),
             start: "top top",
             end: () => `+=${window.innerHeight}`,
-            scrub: 0.5,
-            id: `spread-${index}`,
+            scrub: 0.75,
+            id: `spread-to-stack-${index}`,
           },
         });
       });
 
-      // flip cards and reset rotation with staggered effect
+      // 翻转在收拢到中心的过程中同步进行，收拢结束时翻转完成
       cards.forEach((card, index) => {
         const frontEl = card.querySelector(".flip-card-front");
         const backEl = card.querySelector(".flip-card-back");
 
-        const staggerOffset = index * 0.05;
-        const startOffset = 1 / 3 + staggerOffset;
-        const endOffset = 2 / 3 + staggerOffset;
-
         ScrollTrigger.create({
           trigger: container.current.querySelector(".cards"),
           start: "top top",
-          end: () => `+=${totalScrollHeight}`,
-          scrub: 1,
-          id: `rotate-flip-${index}`,
+          end: () => `+=${window.innerHeight}`,
+          scrub: 0.,
+          id: `flip-during-stack-${index}`,
           onUpdate: (self) => {
-            const progress = self.progress;
-            if (progress >= startOffset && progress <= endOffset) {
-              const animationProgress = (progress - startOffset) / (1 / 3);
-              const frontRotation = -180 * animationProgress;
-              const backRotation = 180 - 180 * animationProgress;
-              const cardRotation = rotations[index] * (1 - animationProgress);
-
-              gsap.to(frontEl, { rotateY: frontRotation, ease: "power1.out" });
-              gsap.to(backEl, { rotateY: backRotation, ease: "power1.out" });
-              gsap.to(card, {
-                xPercent: -50,
-                yPercent: -50,
-                rotate: cardRotation,
-                ease: "power1.out",
-              });
-            }
+            // 提前一些开始翻转，并按索引错开时间
+            const globalAdvance = 0.2; // 全局提前量
+            const perCardStagger = 0.1; // 每张卡错开量
+            const progressWithLeadAndStagger = self.progress + globalAdvance - index * perCardStagger;
+            const t = Math.min(1, Math.max(0, progressWithLeadAndStagger));
+            const frontRotation = -180 + 180 * t; // -180 -> 0
+            const backRotation = 0 + 180 * t; // 0 -> 180
+            gsap.set(frontEl, { rotateY: frontRotation });
+            gsap.set(backEl, { rotateY: backRotation });
           },
         });
       });
@@ -93,20 +97,22 @@ export default function Home() {
 
   return (
     <>
-      <ReactLenis root>
+      <ReactLenis root options={{ lerp: 0.16 }}>
         <div className="container" ref={container}>
           <section className="hero">
-            <ShoeModel />
-            <h1>
-            Scan your sneakers, <br />
-            Own your cards
-            </h1>
-            <button 
-              className="cta-button"
-              onClick={() => window.open('https://x.com/zanweiguo', '_blank')}
-            >
-              Download on App Store
-            </button>
+            <div className="hero-content">
+              <ShoeModel />
+              <h1>
+              Scan your sneakers, <br />
+              Own your cards
+              </h1>
+              <button 
+                className="cta-button"
+                onClick={() => window.open('https://x.com/zanweiguo', '_blank')}
+              >
+                Download on App Store
+              </button>
+            </div>
           </section>
 
           <section className="cards">
