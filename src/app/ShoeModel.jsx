@@ -20,7 +20,7 @@ function Shoe() {
       ref={meshRef}
       object={scene} 
       scale={2}
-      position={[0, -0.5, 0]}
+      position={[0, 0, 0]}
     />
   );
 }
@@ -33,7 +33,7 @@ export default function ShoeModel() {
     <div className="shoe-model-container">
       <Canvas
         camera={{ position: [0, 0, 4], fov: 45 }}
-        style={{ background: "transparent" }}
+        style={{ background: "#000000" }}
       >
         <ambientLight intensity={2.5} />
         <directionalLight position={[10, 10, 5]} intensity={10} />

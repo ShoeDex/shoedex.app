@@ -16,7 +16,7 @@ function ModelLoader() {
           <span></span>
         </div>
       </div>
-      <p>Loading 3D Model...</p>
+      <p>Loading</p>
     </div>
   );
 }
