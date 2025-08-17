@@ -10,12 +10,123 @@ const inter = localFont({
 
 export const metadata = {
   title: "ShoeDex - Scan your sneakers, Own your cards",
-  description: "Transform your sneakers into unique digital collectible cards with ShoeDex",
+  description: "ShoeDex is a sneaker app that turns 3D scans into AI-rated collectible cards.",
+  keywords: "sneakers, digital cards, collectibles, 3D scanning, AI, trading cards, shoes, ShoeDex",
+  authors: [{ name: "ShoeDex Team" }],
+  creator: "ShoeDex",
+  publisher: "ShoeDex",
+  
+  // Open Graph
+  openGraph: {
+    title: "ShoeDex - Scan your sneakers, Own your cards",
+    description: "ShoeDex is a sneaker app that turns 3D scans into AI-rated collectible cards.",
+    url: "https://shoedex.app",
+    siteName: "ShoeDex",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "ShoeDex - Scan your sneakers, Own your cards",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  
+  // Twitter
+  twitter: {
+    card: "summary_large_image",
+    title: "ShoeDex - Scan your sneakers, Own your cards",
+    description: "ShoeDex is a sneaker app that turns 3D scans into AI-rated collectible cards.",
+    images: ["/og-image.jpg"],
+    creator: "@zanweiguo",
+    site: "@ShoeDexApp",
+  },
+  
+  // Mobile optimization
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: false,
+  },
+  
+  // Theme colors
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#000000" },
+  ],
+  
+  // App metadata
+  applicationName: "ShoeDex",
+  appleWebApp: {
+    capable: true,
+    title: "ShoeDex",
+    statusBarStyle: "black-translucent",
+  },
+  
+  // Icons
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
+  
+  // Manifest
+  manifest: "/manifest.json",
+  
+  // Additional metadata
+  category: "Entertainment",
+  classification: "Collectibles & Gaming",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  
+  // Verification
+  verification: {
+    google: "google-site-verification-code",
+    yandex: "yandex-verification-code",
+    yahoo: "yahoo-site-verification-code",
+  },
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "SoftwareApplication",
+              "name": "ShoeDex",
+              "description": "ShoeDex is a sneaker app that turns 3D scans into AI-rated collectible cards.",
+              "url": "https://shoedex.app",
+              "applicationCategory": "Entertainment",
+              "operatingSystem": "iOS, Android",
+              "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "USD"
+              },
+              "creator": {
+                "@type": "Organization",
+                "name": "ShoeDex"
+              },
+              "screenshot": "https://shoedex.app/og-image.jpg"
+            })
+          }}
+        />
+      </head>
       <body className={inter.variable}>
         {children}
       </body>

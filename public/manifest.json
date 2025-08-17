@@ -1,0 +1,53 @@
+{
+  "name": "ShoeDex - Scan your sneakers, Own your cards",
+  "short_name": "ShoeDex",
+  "description": "ShoeDex is a sneaker app that turns 3D scans into AI-rated collectible cards.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#ffffff",
+  "orientation": "portrait",
+  "scope": "/",
+  "categories": ["entertainment", "games", "lifestyle"],
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "16x16 32x32",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/og-image.jpg",
+      "sizes": "1200x630",
+      "type": "image/jpeg",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/og-image.jpg",
+      "sizes": "1200x630",
+      "type": "image/jpeg",
+      "form_factor": "wide"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Scan Sneakers",
+      "short_name": "Scan",
+      "description": "Scan your sneakers, Own your cards",
+      "url": "/scan",
+      "icons": [
+        {
+          "src": "/favicon.ico",
+          "sizes": "32x32"
+        }
+      ]
+    }
+  ]
+}
