@@ -8,7 +8,7 @@ function Shoe() {
   const meshRef = useRef();
   const { scene } = useGLTF("/shoe.glb");
 
-  // 自动旋转动画
+  // Auto-rotation animation
   useFrame((state) => {
     if (meshRef.current) {
       meshRef.current.rotation.y += 0.005;
@@ -25,7 +25,7 @@ function Shoe() {
   );
 }
 
-// 预加载模型
+  // Preload model
 useGLTF.preload("/shoe.glb");
 
 export default function ShoeModel() {

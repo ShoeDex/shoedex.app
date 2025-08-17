@@ -32,12 +32,12 @@ export default function Home() {
         anticipatePin: 1,
       });
 
-      // 设置初始为摊开状态并显示文字面（backText）
+      // Set initial state to spread out and show text face (backText)
       cards.forEach((card, index) => {
         const frontEl = card.querySelector(".flip-card-front");
         const backEl = card.querySelector(".flip-card-back");
 
-        // 初始：摊开 + 显示 back（文字面）
+        // Initial: spread out + show back (text face)
         gsap.set(card, {
           left: `${positions[index]}%`,
           rotation: rotations[index],
@@ -46,7 +46,7 @@ export default function Home() {
         gsap.set(backEl, { rotateY: 0 });
       });
 
-      // 滚动前段：由摊开过渡到中心堆叠（位置与旋转对调）
+      // First scroll phase: transition from spread out to center stack (position and rotation swap)
       cards.forEach((card, index) => {
         gsap.to(card, {
           left: "50%",
@@ -62,7 +62,7 @@ export default function Home() {
         });
       });
 
-      // 翻转在收拢到中心的过程中同步进行，收拢结束时翻转完成
+      // Flip animation happens simultaneously during the gathering to center, flip completes when gathering ends
       cards.forEach((card, index) => {
         const frontEl = card.querySelector(".flip-card-front");
         const backEl = card.querySelector(".flip-card-back");
@@ -74,9 +74,9 @@ export default function Home() {
           scrub: 0.,
           id: `flip-during-stack-${index}`,
           onUpdate: (self) => {
-            // 提前一些开始翻转，并按索引错开时间
-            const globalAdvance = 0.2; // 全局提前量
-            const perCardStagger = 0.08; // 每张卡错开量（调整为5张卡）
+            // Start flip slightly earlier and stagger timing by index
+            const globalAdvance = 0.2; // Global advance amount
+            const perCardStagger = 0.08; // Stagger amount per card (adjusted for 5 cards)
             const progressWithLeadAndStagger = self.progress + globalAdvance - index * perCardStagger;
             const t = Math.min(1, Math.max(0, progressWithLeadAndStagger));
             const frontRotation = -180 + 180 * t; // -180 -> 0
@@ -91,11 +91,11 @@ export default function Home() {
       const textRevealSection = container.current.querySelector(".text-reveal");
       const words = textRevealSection.querySelectorAll(".text-reveal-word");
       
-      // 初始设置：所有文字透明度为 0.2
+      // Initial setup: all text opacity set to 0.2
       gsap.set(words, { opacity: 0.2 });
       
       // Pin the text reveal section until all text is fully revealed
-      const textRevealScrollHeight = window.innerHeight * 1.5; // 控制文字渐显所需的滚动距离
+      const textRevealScrollHeight = window.innerHeight * 1.5; // Control scroll distance needed for text fade-in
       
       ScrollTrigger.create({
         trigger: textRevealSection,
@@ -108,18 +108,17 @@ export default function Home() {
         onUpdate: (self) => {
           const progress = self.progress;
           
-          // 为每个词计算透明度
+          // Calculate opacity for each word
           words.forEach((word, index) => {
             const wordStart = index / words.length;
             const wordEnd = (index + 1) / words.length;
             const wordProgress = Math.min(1, Math.max(0, (progress - wordStart) / (wordEnd - wordStart)));
-            const opacity = 0.2 + (0.8 * wordProgress); // 从 0.2 到 1.0
+            const opacity = 0.2 + (0.8 * wordProgress); // From 0.2 to 1.0
             gsap.set(word, { opacity });
           });
 
-          // 背景颜色渐变动画：从黑色到蓝色 #0453FF
           const startColor = { r: 0, g: 0, b: 0 }; // #000000
-          const endColor = { r: 4, g: 83, b: 255 }; // #0453FF
+          const endColor = { r: 4, g: 50, b: 255 }; //rgb(4, 50, 255)
           
           const currentR = Math.round(startColor.r + (endColor.r - startColor.r) * progress);
           const currentG = Math.round(startColor.g + (endColor.g - startColor.g) * progress);
@@ -150,6 +149,9 @@ export default function Home() {
               Scan your sneakers, <br />
               Own your cards
               </h1>
+              <h2 className="hero-subtitle">
+              ShoeDex is a sneaker app that turns 3D scans into AI-rated collectible cards.
+              </h2>
               <button 
                 className="cta-button"
                 onClick={() => window.open('https://x.com/zanweiguo', '_blank')}
@@ -164,7 +166,7 @@ export default function Home() {
 
           <section className="cards">
             {[...Array(5)].map((_, index) => {
-              // 为不同的卡片分配不同的背景图片
+              // Assign different background images to different cards
               const cardBackgrounds = [
                 "/card-front-5.png",
                 "/card-front-4.png",
@@ -201,7 +203,7 @@ export default function Home() {
         </div>
       </ReactLenis>
       
-              {/* Footer 移出 container 和 ReactLenis */}
+              {/* Footer moved outside container and ReactLenis */}
         <section className="footer">
           <div className="footer-title">ShoeDex</div>
         </section>
