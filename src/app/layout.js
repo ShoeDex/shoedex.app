@@ -1,4 +1,6 @@
 import localFont from "next/font/local";
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import "./globals.css";
 
 const inter = localFont({
@@ -129,6 +131,8 @@ export default function RootLayout({ children }) {
       </head>
       <body className={inter.variable}>
         {children}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
