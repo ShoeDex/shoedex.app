@@ -54,7 +54,7 @@ h1 {
 /* Cards section */
 .cards {
   position: relative;
-  height: 50vw;
+  height: 55vw;
   display: flex;
   align-items: center;
   justify-content: center;
