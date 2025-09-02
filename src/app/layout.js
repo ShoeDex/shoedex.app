@@ -42,7 +42,7 @@ export const metadata = {
     title: "ShoeDex - Scan your sneakers, Own your cards",
     description: "ShoeDex is a sneaker app that turns 3D scans into AI-rated collectible cards.",
     images: ["/og-image.jpg"],
-    creator: "@zanweiguo",
+    creator: "@zanwei_guo",
     site: "@ShoeDexApp",
   },
   
